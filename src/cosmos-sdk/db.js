@@ -1,16 +1,13 @@
 const { CosmosClient } = require("@azure/cosmos");
 const config = require("./config");
 
-const options = {};
+const options = {
+  endpoint: process.env.AZURE_ENDPOINT,
+  key: process.env.AZURE_KEY,
+  userAgentSuffix: process.env.AZURE_USERAGENTSUFFIX,
+};
 
 const client = new CosmosClient(options);
-
-const run = async () => {
-  const { database } = await client.databases.createIfNotExists({
-    id: config.databaseDefName,
-  });
-  containerCreate(database, config.phonesContainer, "/username");
-};
 
 async function containerCreate(database, containerDef, paths) {
   // Create the container
@@ -28,6 +25,13 @@ async function containerCreate(database, containerDef, paths) {
   console.log(`created container: ${container.id}`);
 }
 
-// run();
+const run = async () => {
+  const { database } = await client.databases.createIfNotExists({
+    id: config.databaseDefName,
+  });
+  containerCreate(database, config.phonesContainer, "/username");
+};
+
+run();
 
 module.exports = client;

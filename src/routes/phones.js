@@ -1,10 +1,8 @@
 var express = require("express");
 var router = express.Router();
-var phoneService = require("../services/phones.service");
+var phoneService = require("../services/phones/phones.service");
+const { requestValidation } = require("../services/phones/validation");
 
-router.post("/", phoneService.createPhone, function (req, res, next) {
-  phoneService.createPhone();
-  res.json({ user: "nana" });
-});
+router.post("/", requestValidation, phoneService.createPhone);
 
 module.exports = router;
