@@ -13,8 +13,7 @@ async function containerCreate(database, containerDef, paths) {
   // Create the container
   const containerDefinition = {
     id: containerDef,
-    indexingPolicy: { automatic: true }, // turn on indexes (default)
-    // indexingPolicy: { automatic: false }, // turn of indexes
+    indexingPolicy: { automatic: true }, // turn of indexes
     partitionKey: {
       paths: [paths],
     },
@@ -29,7 +28,7 @@ const run = async () => {
   const { database } = await client.databases.createIfNotExists({
     id: config.databaseDefName,
   });
-  containerCreate(database, config.phonesContainer, "/username");
+  containerCreate(database, config.phonesContainer, "/data");
 };
 
 run();

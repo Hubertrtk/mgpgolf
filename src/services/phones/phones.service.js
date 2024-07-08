@@ -1,12 +1,20 @@
-// const client = require("../cosmos-sdk/db");
-// const config = require("../cosmos-sdk/config");
-// const container = client
-//   .database(config.databaseDefName)
-//   .container(config.phonesContainer);
+const client = require("../../cosmos-sdk/db");
+const config = require("../../cosmos-sdk/config");
+const container = client
+  .database(config.databaseDefName)
+  .container(config.phonesContainer);
+
+const item = {
+  name: "foo",
+  address: {
+    zip: 100,
+  },
+  active: true,
+};
 
 async function createPhone(req, res, next) {
   try {
-    console.log("hello");
+    await container.items.create(item);
     res.status(201).json({ succes: true });
   } catch (error) {
     console.log("error");
