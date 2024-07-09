@@ -28,7 +28,7 @@ const run = async () => {
   const { database } = await client.databases.createIfNotExists({
     id: config.databaseDefName,
   });
-  containerCreate(database, config.phonesContainer, "/data");
+  containerCreate(database, config.phonesContainer, "/phone_number");
 };
 
 run();

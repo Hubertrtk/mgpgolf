@@ -4,21 +4,31 @@ const container = client
   .database(config.databaseDefName)
   .container(config.phonesContainer);
 
-const item = {
-  name: "foo",
-  address: {
-    zip: 100,
-  },
-  active: true,
-};
+async function getPhone(phoneNumber) {
+  const { resources } = await container.items
+    .query({
+      query: "SELECT * from c WHERE c.phone_number = @phoneNumber",
+      parameters: [{ name: "@phoneNumber", value: phoneNumber }],
+    })
+    .fetchAll();
+
+  return resources;
+}
 
 async function createPhone(req, res, next) {
+  const data = req.body;
   try {
-    await container.items.create(item);
+    const existingPhoneNumber = await getPhone(data.phone_number);
+    if (existingPhoneNumber.length > 0) {
+      return res.status(400).json({ message: "Phone number already exists" });
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+  try {
+    await container.items.create(req.body);
     res.status(201).json({ succes: true });
   } catch (error) {
-    console.log("error");
-    console.log(error);
     res.status(500).send(error);
   }
 }
